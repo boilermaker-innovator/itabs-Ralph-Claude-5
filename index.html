@@ -3,529 +3,385 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Baratec iTabs - Mechanical Contractors Perth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melbourne Moment | How Matt Built His Own Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --melb-blue: #0A2342;
+            --melb-teal: #2CA6A4;
+            --coffee-brown: #6F4E37;
+            --cream: #FDF8F0;
+            --text: #2C2416;
+            --itabs-blue: #0066CC;
+            --itabs-glow: rgba(0, 102, 204, 0.3);
+        }
 
 ```
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
 
-    :root {
-        --baratec-orange: #FF6B00;
-        --baratec-dark: #1A1A1A;
-        --baratec-steel: #2D2D2D;
-        --baratec-light: #F5F5F5;
-        --baratec-accent: #FF8533;
-    }
-
     body {
-        font-family: 'Barlow', sans-serif;
-        background: linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 50%, #2D2D2D 100%);
-        min-height: 100vh;
-        padding: 20px;
-        color: var(--baratec-light);
+        font-family: 'Source Sans 3', sans-serif;
+        background: var(--cream);
+        color: var(--text);
+        line-height: 1.8;
     }
 
-    /* Header */
-    .baratec-header {
+    .header {
+        background: linear-gradient(135deg, var(--melb-blue) 0%, #1a3a5c 100%);
+        padding: 3rem 2rem;
         text-align: center;
-        margin-bottom: 30px;
-        padding: 20px;
-        background: linear-gradient(90deg, transparent, rgba(255, 107, 0, 0.1), transparent);
-        border-top: 3px solid var(--baratec-orange);
-        border-bottom: 1px solid rgba(255, 107, 0, 0.3);
+        color: white;
     }
 
-    .baratec-logo {
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 48px;
-        letter-spacing: 8px;
-        color: var(--baratec-orange);
-        text-shadow: 0 0 30px rgba(255, 107, 0, 0.5);
-        margin-bottom: 5px;
+    .header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2rem, 5vw, 3rem);
+        margin-bottom: 0.5rem;
     }
 
-    .baratec-tagline {
-        font-size: 14px;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.6);
+    .header h1 span {
+        color: var(--melb-teal);
     }
 
-    /* iTabs Container */
-    .itabs-container {
-        max-width: 900px;
+    .header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        max-width: 550px;
         margin: 0 auto;
     }
 
-    /* Service Carousel */
-    .service-carousel {
-        position: relative;
-        width: 100%;
-        height: 450px;
-        border-radius: 12px;
-        overflow: hidden;
-        background: var(--baratec-steel);
-        box-shadow: 
-            0 20px 60px rgba(0, 0, 0, 0.5),
-            0 0 0 1px rgba(255, 107, 0, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    .header-note {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: rgba(255,255,255,0.1);
+        border-radius: 8px;
+        display: inline-block;
     }
 
-    /* Slides */
-    .slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transition: opacity 0.6s ease;
+    .header-note p {
+        margin: 0;
+        font-size: 0.95rem;
     }
 
-    .slide.active {
-        opacity: 1;
+    .story {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem;
     }
 
-    .slide-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: brightness(0.7) contrast(1.1);
+    .story-section {
+        margin-bottom: 3rem;
     }
 
-    /* Service Title Overlay */
-    .slide-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 30px;
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+    .story h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.6rem;
+        color: var(--melb-blue);
+        margin-bottom: 1rem;
     }
 
-    .service-number {
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 72px;
-        color: var(--baratec-orange);
-        opacity: 0.3;
-        line-height: 1;
-        margin-bottom: -20px;
+    .story p {
+        margin-bottom: 1.25rem;
+        font-size: 1.05rem;
     }
 
-    .service-title {
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 36px;
-        letter-spacing: 2px;
-        color: white;
-        text-transform: uppercase;
+    .dialogue {
+        background: white;
+        border-left: 4px solid var(--coffee-brown);
+        padding: 1rem 1.25rem;
+        margin: 1.5rem 0;
+        border-radius: 0 8px 8px 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    .service-brief {
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.7);
-        margin-top: 8px;
-        max-width: 80%;
+    .dialogue.jon {
+        border-left-color: var(--itabs-blue);
     }
 
-    /* Navigation Dots */
-    .carousel-nav {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        display: flex;
-        gap: 10px;
-        z-index: 10;
+    .dialogue.matt {
+        border-left-color: var(--melb-teal);
     }
 
-    .nav-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 2px;
-        background: rgba(255, 255, 255, 0.3);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    .dialogue .speaker {
+        font-weight: 600;
+        color: var(--coffee-brown);
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
     }
 
-    .nav-dot:hover {
-        background: rgba(255, 255, 255, 0.5);
+    .dialogue.jon .speaker {
+        color: var(--itabs-blue);
     }
 
-    .nav-dot.active {
-        background: var(--baratec-orange);
-        box-shadow: 0 0 15px var(--baratec-orange);
-        transform: scale(1.2);
+    .dialogue.matt .speaker {
+        color: var(--melb-teal);
     }
 
-    /* The "i" Button */
-    .itabs-button {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        width: 56px;
-        height: 56px;
-        background: var(--baratec-orange);
-        border: none;
-        border-radius: 50%;
-        color: white;
-        font-family: 'Georgia', serif;
-        font-size: 32px;
+    .dialogue p {
+        margin: 0;
         font-style: italic;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 20;
-        box-shadow: 
-            0 4px 20px rgba(255, 107, 0, 0.5),
-            inset 0 2px 0 rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-        animation: pulse 2s ease-in-out infinite;
     }
 
-    @keyframes pulse {
-        0%, 100% { 
-            transform: scale(1);
-            box-shadow: 0 4px 20px rgba(255, 107, 0, 0.5);
-        }
-        50% { 
-            transform: scale(1.05);
-            box-shadow: 0 4px 30px rgba(255, 107, 0, 0.8);
-        }
-    }
-
-    .itabs-button:hover {
-        transform: scale(1.1);
-        animation: none;
-        box-shadow: 0 6px 30px rgba(255, 107, 0, 0.8);
-    }
-
-    /* Popup Overlay */
-    .popup-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 100;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-    }
-
-    .popup-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    /* Popup Content */
-    .popup-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.9);
-        width: 90%;
-        max-width: 500px;
-        max-height: 85vh;
-        overflow-y: auto;
-        background: linear-gradient(180deg, #2D2D2D 0%, #1A1A1A 100%);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 107, 0, 0.3);
-        box-shadow: 
-            0 30px 80px rgba(0, 0, 0, 0.8),
-            0 0 0 1px rgba(255, 107, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        transition: transform 0.3s ease;
-    }
-
-    .popup-overlay.active .popup-content {
-        transform: translate(-50%, -50%) scale(1);
-    }
-
-    /* Popup Header */
-    .popup-header {
-        padding: 25px;
-        background: linear-gradient(90deg, var(--baratec-orange), var(--baratec-accent));
-        border-radius: 16px 16px 0 0;
-        position: relative;
-    }
-
-    .popup-close {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        width: 36px;
-        height: 36px;
-        background: rgba(0, 0, 0, 0.3);
-        border: none;
-        border-radius: 50%;
+    .location-tag {
+        display: inline-block;
+        background: var(--melb-blue);
         color: white;
-        font-size: 24px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
     }
 
-    .popup-close:hover {
-        background: rgba(0, 0, 0, 0.5);
-        transform: rotate(90deg);
+    .highlight-box {
+        background: linear-gradient(135deg, #E8F7F7, #D0F0EF);
+        border: 2px solid var(--melb-teal);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
     }
 
-    .popup-service-title {
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 28px;
-        letter-spacing: 2px;
-        color: white;
-        text-transform: uppercase;
+    .highlight-box h3 {
+        color: var(--melb-teal);
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 0.75rem;
     }
 
-    /* Popup Body */
-    .popup-body {
-        padding: 25px;
+    .highlight-box p {
+        margin-bottom: 0.75rem;
     }
 
-    .info-section {
-        margin-bottom: 25px;
-    }
-
-    .info-section:last-child {
+    .highlight-box p:last-child {
         margin-bottom: 0;
     }
 
-    .info-label {
-        font-size: 11px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: var(--baratec-orange);
-        margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .info-label::before {
-        content: '';
-        width: 20px;
-        height: 2px;
-        background: var(--baratec-orange);
-    }
-
-    .info-content {
-        font-size: 15px;
-        line-height: 1.7;
-        color: rgba(255, 255, 255, 0.85);
-    }
-
-    .info-list {
-        list-style: none;
-        padding: 0;
-    }
-
-    .info-list li {
-        padding: 8px 0;
-        padding-left: 20px;
-        position: relative;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .info-list li:last-child {
-        border-bottom: none;
-    }
-
-    .info-list li::before {
-        content: '▸';
-        position: absolute;
-        left: 0;
-        color: var(--baratec-orange);
-    }
-
-    /* CTA Button */
-    .popup-cta {
-        display: block;
-        width: 100%;
-        padding: 18px;
-        background: linear-gradient(90deg, var(--baratec-orange), var(--baratec-accent));
-        border: none;
-        border-radius: 8px;
+    .demo-link-box {
+        background: linear-gradient(135deg, var(--itabs-blue), #0052a3);
         color: white;
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 20px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        text-decoration: none;
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
         text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 20px;
-        box-shadow: 0 4px 20px rgba(255, 107, 0, 0.3);
     }
 
-    .popup-cta:hover {
+    .demo-link-box h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .demo-link-box p {
+        margin-bottom: 1rem;
+        opacity: 0.95;
+    }
+
+    .demo-link-box a {
+        display: inline-block;
+        background: white;
+        color: var(--itabs-blue);
+        padding: 0.875rem 2rem;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .demo-link-box a:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(255, 107, 0, 0.5);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     }
 
-    /* Experience Badge */
-    .experience-badge {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        padding: 15px;
-        background: rgba(255, 107, 0, 0.1);
-        border-radius: 8px;
-        border: 1px solid rgba(255, 107, 0, 0.2);
-        margin-top: 15px;
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+        border-left: 3px solid var(--melb-teal);
+        margin: 2rem 0;
     }
 
-    .exp-number {
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 42px;
-        color: var(--baratec-orange);
-        line-height: 1;
+    .timeline-item {
+        position: relative;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px dashed #ddd;
     }
 
-    .exp-text {
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: rgba(255, 255, 255, 0.7);
-        line-height: 1.4;
+    .timeline-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
 
-    /* Small iTabs branding */
-    .itabs-branding {
+    .timeline-item::before {
+        content: '';
         position: absolute;
-        bottom: 15px;
-        left: 20px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 11px;
-        color: rgba(255, 255, 255, 0.4);
-        z-index: 10;
+        left: -2rem;
+        top: 0.5rem;
+        width: 12px;
+        height: 12px;
+        background: var(--melb-teal);
+        border-radius: 50%;
+        transform: translateX(-50%);
     }
 
-    .itabs-branding-btn {
-        width: 18px;
-        height: 18px;
-        background: rgba(255, 255, 255, 0.15);
+    .timeline-time {
+        font-weight: 600;
+        color: var(--melb-teal);
+        font-size: 0.9rem;
+    }
+
+    .itabs-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        background: var(--itabs-blue);
+        color: white;
         border: none;
         border-radius: 50%;
-        color: rgba(255, 255, 255, 0.6);
-        font-family: 'Georgia', serif;
-        font-size: 11px;
+        font-size: 13px;
+        font-weight: 700;
         font-style: italic;
+        font-family: Georgia, serif;
         cursor: pointer;
         transition: all 0.2s ease;
+        box-shadow: 0 2px 8px var(--itabs-glow);
+        vertical-align: middle;
+        margin: 0 2px;
     }
 
-    .itabs-branding-btn:hover {
-        background: var(--baratec-orange);
-        color: white;
+    .itabs-btn:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 15px var(--itabs-glow);
     }
 
-    /* Contact Info in popup */
-    .contact-row {
-        display: flex;
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(10, 35, 66, 0.85);
+        z-index: 1000;
+        justify-content: center;
         align-items: center;
-        gap: 12px;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 1rem;
+        backdrop-filter: blur(4px);
     }
 
-    .contact-row:last-child {
-        border-bottom: none;
+    .popup-overlay.active {
+        display: flex;
     }
 
-    .contact-icon {
-        width: 36px;
-        height: 36px;
-        background: rgba(255, 107, 0, 0.15);
-        border-radius: 8px;
+    .popup {
+        background: white;
+        color: var(--text);
+        border-radius: 12px;
+        max-width: 420px;
+        width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        animation: popupIn 0.3s ease;
+    }
+
+    @keyframes popupIn {
+        from { opacity: 0; transform: scale(0.9) translateY(20px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .popup-header {
+        background: var(--itabs-blue);
+        color: white;
+        padding: 1rem 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .popup-header h4 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+    }
+
+    .popup-close {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 16px;
     }
 
-    .contact-text {
-        font-size: 15px;
-        color: rgba(255, 255, 255, 0.9);
+    .popup-close:hover {
+        background: rgba(255,255,255,0.3);
     }
 
-    .contact-text a {
-        color: var(--baratec-orange);
+    .popup-content {
+        padding: 1.25rem;
+    }
+
+    .popup-content p {
+        margin-bottom: 0.75rem;
+        line-height: 1.6;
+    }
+
+    .popup-content strong {
+        color: var(--itabs-blue);
+    }
+
+    .popup-content ul, .popup-content ol {
+        margin: 0.75rem 0;
+        padding-left: 1.25rem;
+    }
+
+    .popup-content li {
+        margin-bottom: 0.4rem;
+    }
+
+    .popup-content a {
+        color: var(--itabs-blue);
         text-decoration: none;
+        font-weight: 600;
     }
 
-    .contact-text a:hover {
+    .popup-content a:hover {
         text-decoration: underline;
     }
 
-    /* Mobile Responsive */
-    @media (max-width: 600px) {
-        .service-carousel {
-            height: 400px;
-        }
-
-        .baratec-logo {
-            font-size: 36px;
-            letter-spacing: 5px;
-        }
-
-        .service-number {
-            font-size: 48px;
-        }
-
-        .service-title {
-            font-size: 28px;
-        }
-
-        .itabs-button {
-            width: 48px;
-            height: 48px;
-            font-size: 28px;
-        }
-
-        .popup-content {
-            width: 95%;
-        }
+    .footer {
+        background: var(--melb-blue);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
     }
 
-    /* Swipe hint */
-    .swipe-hint {
-        position: absolute;
-        bottom: 70px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.4);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        z-index: 5;
+    .footer p {
+        opacity: 0.7;
+        font-size: 0.9rem;
     }
 
-    .swipe-hint::before,
-    .swipe-hint::after {
-        content: '←';
-        opacity: 0.5;
+    .footer a {
+        color: var(--melb-teal);
     }
 
-    .swipe-hint::after {
-        content: '→';
+    .emoji-big {
+        font-size: 3rem;
+        display: block;
+        text-align: center;
+        margin: 1rem 0;
     }
 </style>
 ```
@@ -534,408 +390,331 @@
 <body>
 
 ```
-<!-- Header -->
-<div class="baratec-header">
-    <div class="baratec-logo">BARATEC</div>
-    <div class="baratec-tagline">Mechanical Contractors • Perth WA</div>
-</div>
-
-<!-- iTabs Container -->
-<div class="itabs-container">
-    <div class="service-carousel" id="carousel">
-        
-        <!-- Slide 1: Mobile Welding -->
-        <div class="slide active" data-service="welding">
-            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=900&h=600&fit=crop" 
-                 alt="Mobile Welding and Fabrication" 
-                 class="slide-image">
-            <div class="slide-overlay">
-                <div class="service-number">01</div>
-                <div class="service-title">Mobile Welding & Fabrication</div>
-                <div class="service-brief">Stainless, Structural, Aluminum • Mining & Industrial</div>
-            </div>
-        </div>
-
-        <!-- Slide 2: Plant Maintenance -->
-        <div class="slide" data-service="maintenance">
-            <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=900&h=600&fit=crop" 
-                 alt="Fixed and Mobile Plant Maintenance" 
-                 class="slide-image">
-            <div class="slide-overlay">
-                <div class="service-number">02</div>
-                <div class="service-title">Plant Maintenance</div>
-                <div class="service-brief">Fixed & Mobile Equipment • Preventive Solutions</div>
-            </div>
-        </div>
-
-        <!-- Slide 3: CAD Design -->
-        <div class="slide" data-service="cad">
-            <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?w=900&h=600&fit=crop" 
-                 alt="CAD Design Services" 
-                 class="slide-image">
-            <div class="slide-overlay">
-                <div class="service-number">03</div>
-                <div class="service-title">CAD Design</div>
-                <div class="service-brief">Expert Design Team • Maximize Your Ideas</div>
-            </div>
-        </div>
-
-        <!-- Slide 4: Custom Stainless -->
-        <div class="slide" data-service="stainless">
-            <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=900&h=600&fit=crop" 
-                 alt="Custom Stainless Steel Products" 
-                 class="slide-image">
-            <div class="slide-overlay">
-                <div class="service-number">04</div>
-                <div class="service-title">Custom Stainless Products</div>
-                <div class="service-brief">Shop Fitouts • Bars • Marine • Mining Extraction</div>
-            </div>
-        </div>
-
-        <!-- The "i" Button -->
-        <button class="itabs-button" id="infoBtn" title="Tap for details">i</button>
-
-        <!-- Navigation Dots -->
-        <div class="carousel-nav">
-            <div class="nav-dot active" data-slide="0"></div>
-            <div class="nav-dot" data-slide="1"></div>
-            <div class="nav-dot" data-slide="2"></div>
-            <div class="nav-dot" data-slide="3"></div>
-        </div>
-
-        <!-- Swipe Hint -->
-        <div class="swipe-hint">swipe</div>
-
-        <!-- iTabs Branding -->
-        <div class="itabs-branding">
-            <button class="itabs-branding-btn" title="What is iTabs?">i</button>
-            <span>Powered by iTabs</span>
-        </div>
+<header class="header">
+    <h1>🍺 Melbourne Moment: <span>Matt Builds His Own Tool</span></h1>
+    <p>Jon went to get beers. Came back to a working prototype.</p>
+    <div class="header-note">
+        <p>👆 Click the blue <button class="itabs-btn" data-popup="what-is-itabs">i</button> buttons to see iTabs in action throughout this story</p>
     </div>
-</div>
+</header>
 
-<!-- Popup Overlay -->
+<main class="story">
+
+    <section class="story-section">
+        <span class="location-tag">📍 Melbourne, Victoria</span>
+        <h2>The Catch-Up</h2>
+        
+        <p>Jon's in Melbourne on holiday <button class="itabs-btn" data-popup="melbourne">i</button>. Catches up with Matt — a mate who works in Victorian government schools. Beers. Pub. The usual.</p>
+
+        <p>Jon starts showing him this thing he's been building called iTabs <button class="itabs-btn" data-popup="itabs">i</button>. Little blue buttons that explain confusing stuff. Click, get the info, keep going.</p>
+
+        <div class="dialogue matt">
+            <div class="speaker">MATT</div>
+            <p>"That's actually... really simple. Could this work for the stuff we deal with at school?"</p>
+        </div>
+
+        <div class="dialogue jon">
+            <div class="speaker">JON</div>
+            <p>"What kind of stuff?"</p>
+        </div>
+
+        <div class="dialogue matt">
+            <div class="speaker">MATT</div>
+            <p>"PAL <button class="itabs-btn" data-popup="pal">i</button>. The Policy and Advisory Library. It's where all our school policies live. Hundreds of them. And honestly? Most staff just give up trying to find anything."</p>
+        </div>
+
+        <p>Jon opened Claude on his laptop, showed Matt the basics. Then the glasses were empty.</p>
+
+        <div class="dialogue jon">
+            <div class="speaker">JON</div>
+            <p>"I'll grab us another round. Have a go yourself — just describe what you need."</p>
+        </div>
+
+        <p>Jon headed to the bar.</p>
+    </section>
+
+    <section class="story-section">
+        <h2>The Build</h2>
+
+        <p>Jon came back with two beers.</p>
+
+        <p>Matt had already built half of it.</p>
+
+        <div class="dialogue jon">
+            <div class="speaker">JON</div>
+            <p>"...mate, what did you do?"</p>
+        </div>
+
+        <div class="dialogue matt">
+            <div class="speaker">MATT</div>
+            <p>"I just described what teachers need. Categories, search box, links to the actual policies. It just... built it?"</p>
+        </div>
+
+        <p>Matt had typed prompts in plain English. Described the categories — HR, student safety, excursions, mobile phones <button class="itabs-btn" data-popup="mobile-phones">i</button>. Explained what teachers always complain about. Asked for a search box where staff could ask questions like normal humans.</p>
+
+        <p>Claude <button class="itabs-btn" data-popup="claude">i</button> built it. Piece by piece. Matt gave feedback. Claude refined. All while Jon was waiting at the bar.</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-time">While Jon ordered</div>
+                <p>Matt got the basic structure with category cards</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">While Jon waited for the pour</div>
+                <p>AI search box added — ask questions, get answers</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">While Jon paid</div>
+                <p>Real hyperlinks to actual PAL policies</p>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">While Jon walked back</div>
+                <p>Clickable category lists with individual policy links</p>
+            </div>
+        </div>
+
+        <div class="dialogue jon">
+            <div class="speaker">JON</div>
+            <p>"I was gone for like five minutes."</p>
+        </div>
+
+        <div class="dialogue matt">
+            <div class="speaker">MATT</div>
+            <p>"Yeah. Is it meant to be this easy?"</p>
+        </div>
+
+        <div class="dialogue jon">
+            <div class="speaker">JON</div>
+            <p>"Welcome to vibe coding <button class="itabs-btn" data-popup="vibe-coding">i</button>, mate."</p>
+        </div>
+    </section>
+
+    <div class="highlight-box">
+        <h3><button class="itabs-btn" data-popup="the-point">i</button> The Point</h3>
+        <p>Matt's not a developer. Never written code. First time using AI like this.</p>
+        <p>Jon went to get beers. Came back to a working prototype.</p>
+        <p><strong>That's the whole idea.</strong> The people closest to the problem should be able to build the solution. No hand-holding required.</p>
+    </div>
+
+    <section class="story-section">
+        <h2>The Result</h2>
+
+        <p>They finished their beers polishing it up. Added a few more iTabs. Tweaked the layout.</p>
+
+        <p>Jon uploaded it to GitHub <button class="itabs-btn" data-popup="github">i</button>. Two minutes later — live URL.</p>
+
+        <div class="demo-link-box">
+            <h3>🎯 What Matt Built</h3>
+            <p>A working PAL demo with AI search, clickable categories, and iTabs throughout</p>
+            <a href="https://boilermaker-innovator.github.io/My-pal/" target="_blank">View Matt's Demo →</a>
+        </div>
+
+        <div class="dialogue matt">
+            <div class="speaker">MATT</div>
+            <p>"So I can just... show this to people? It's live?"</p>
+        </div>
+
+        <div class="dialogue jon">
+            <div class="speaker">JON</div>
+            <p>"It's live. Send the link to whoever you want."</p>
+        </div>
+
+        <div class="dialogue matt">
+            <div class="speaker">MATT</div>
+            <p>"I'm showing this to IT on Monday."</p>
+        </div>
+    </section>
+
+    <section class="story-section">
+        <h2>Monday Morning</h2>
+
+        <p>Picture it: Matt walks into his school's IT department <button class="itabs-btn" data-popup="it-dept">i</button>.</p>
+
+        <div class="dialogue matt">
+            <div class="speaker">MATT</div>
+            <p>"Hey, I made something over the weekend. It makes PAL actually usable."</p>
+        </div>
+
+        <p>They'll ask how he built it. He'll say he just described what he needed and AI did the rest.</p>
+
+        <p>No procurement process. No vendor meetings. No six-month project timeline. No budget approval.</p>
+
+        <p>Just a bloke who knows the problem, a coffee with a mate, and a few prompts.</p>
+
+        <span class="emoji-big">🚀</span>
+    </section>
+
+    <div class="highlight-box">
+        <h3><button class="itabs-btn" data-popup="why-matters">i</button> Why This Matters</h3>
+        <p>This isn't about one demo for one school.</p>
+        <p>It's proof that <strong>the people who understand problems can now build solutions</strong> — without needing to be developers, without needing budget approval, without waiting for IT.</p>
+        <p>Matt built a working tool over coffee. On a weekend. And it's live on the internet right now.</p>
+    </div>
+
+    <section class="story-section">
+        <h2>Try It Yourself</h2>
+
+        <p>Click the link below to see what Matt built. Click the blue <button class="itabs-btn" data-popup="itabs">i</button> buttons. Ask a question in the search box. Browse the categories.</p>
+
+        <p>Then imagine what you could build for your workplace.</p>
+
+        <div class="demo-link-box">
+            <h3>👀 See Matt's PAL Demo</h3>
+            <p>Built in one conversation. Live on the internet. Ready to show IT.</p>
+            <a href="https://boilermaker-innovator.github.io/My-pal/" target="_blank">Open the Demo →</a>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>Built with 🍺 in Melbourne | Powered by <a href="https://itabs.ai" target="_blank">iTabs</a></p>
+</footer>
+
 <div class="popup-overlay" id="popupOverlay">
-    <div class="popup-content" id="popupContent">
-        <!-- Content populated by JavaScript -->
+    <div class="popup">
+        <div class="popup-header">
+            <h4 id="popupTitle">Info</h4>
+            <button class="popup-close" onclick="closePopup()">×</button>
+        </div>
+        <div class="popup-content" id="popupContent"></div>
     </div>
 </div>
 
 <script>
-    // Service Data
-    const services = {
-        welding: {
-            title: "Mobile Welding & Fabrication",
-            sections: [
-                {
-                    label: "What We Do",
-                    content: "On-site welding and fabrication services across Perth and WA. We bring the workshop to you - eliminating transport costs and downtime."
-                },
-                {
-                    label: "Materials We Work With",
-                    type: "list",
-                    items: [
-                        "Stainless Steel (all grades)",
-                        "Structural Steel",
-                        "Aluminum & Marine Grade Alloys",
-                        "Carbon Steel"
-                    ]
-                },
-                {
-                    label: "Industries Served",
-                    type: "list",
-                    items: [
-                        "Mining & Resources",
-                        "Industrial & Manufacturing",
-                        "Commercial & Architectural",
-                        "Marine & Offshore"
-                    ]
-                },
-                {
-                    label: "Why Choose Mobile",
-                    content: "No transport delays. No machinery downtime. We weld on-site so your equipment stays where it needs to be - working."
-                }
-            ]
+    const itabsContent = {
+        'what-is-itabs': {
+            title: 'What is iTabs?',
+            content: `
+                <p><strong>iTabs = Information Enhancement Technology</strong></p>
+                <p>Those little blue "i" buttons you're clicking right now? That's iTabs.</p>
+                <p>Click one → get the info you need → keep reading.</p>
+                <p>The whole point is to put helpful information exactly where the confusion happens.</p>
+            `
         },
-        maintenance: {
-            title: "Plant Maintenance",
-            sections: [
-                {
-                    label: "What We Do",
-                    content: "Complete mechanical maintenance for fixed and mobile plant equipment. We don't just fix problems - we prevent them."
-                },
-                {
-                    label: "Equipment We Service",
-                    type: "list",
-                    items: [
-                        "Crushing & Screening Plants",
-                        "Conveyors & Material Handling",
-                        "Industrial Machinery",
-                        "Mobile Equipment & Loaders"
-                    ]
-                },
-                {
-                    label: "Our Approach",
-                    content: "Proactive maintenance reduces downtime and extends equipment life. We identify issues before they become expensive breakdowns."
-                },
-                {
-                    label: "Response Time",
-                    content: "Breakdowns don't wait - neither do we. Rapid response across the Perth metro area and regional WA."
-                }
-            ]
+        'melbourne': {
+            title: 'Melbourne, Victoria',
+            content: `
+                <p>Australia's second-largest city. Home to coffee culture, laneways, and apparently productive holiday catch-ups.</p>
+                <p>Jon's normally based in Perth but was visiting Melbourne when he caught up with Matt.</p>
+            `
         },
-        cad: {
-            title: "CAD Design",
-            sections: [
-                {
-                    label: "What We Do",
-                    content: "Professional CAD design services that turn your concepts into detailed, buildable plans. From napkin sketches to precision drawings."
-                },
-                {
-                    label: "Design Services",
-                    type: "list",
-                    items: [
-                        "2D & 3D CAD Drawings",
-                        "Fabrication Drawings",
-                        "Structural Design",
-                        "Custom Product Design"
-                    ]
-                },
-                {
-                    label: "The Baratec Difference",
-                    content: "Our designers are also fabricators. We design with manufacturing in mind - saving time and money when it comes to building."
-                },
-                {
-                    label: "From Design to Reality",
-                    content: "One team handles design AND fabrication. No miscommunication. No delays. Your project stays on track."
-                }
-            ]
+        'itabs': {
+            title: 'iTabs',
+            content: `
+                <p><strong>Information Enhancement Technology</strong></p>
+                <p>A simple concept: put a little blue button next to anything confusing. Click it, get an explanation in plain English.</p>
+                <p>Works on mobile. Doesn't require apps or logins. Just helpful information exactly when you need it.</p>
+                <p><a href="https://itabs.ai" target="_blank">Learn more at itabs.ai →</a></p>
+            `
         },
-        stainless: {
-            title: "Custom Stainless Products",
-            sections: [
-                {
-                    label: "What We Do",
-                    content: "Bespoke stainless steel fabrication for commercial, hospitality, marine, and industrial applications. Built to your exact specifications."
-                },
-                {
-                    label: "Products We Create",
-                    type: "list",
-                    items: [
-                        "Commercial Kitchen Fitouts",
-                        "Bar & Hospitality Equipment",
-                        "Marine Hardware & Fittings",
-                        "Mining Extraction Systems"
-                    ]
-                },
-                {
-                    label: "Quality Guarantee",
-                    content: "Food-grade finishes. Marine-grade durability. Every piece polished to perfection and built to last decades."
-                },
-                {
-                    label: "Custom = No Limits",
-                    content: "If you can imagine it, we can build it. Bring us your challenge - we'll engineer the solution."
-                }
-            ]
+        'pal': {
+            title: 'PAL — Policy and Advisory Library',
+            content: `
+                <p><strong>The Victorian government's policy database for schools.</strong></p>
+                <p>Contains hundreds of policies covering everything from excursions to anaphylaxis to mobile phone rules.</p>
+                <p>Essential for school staff. Also notoriously hard to navigate — which is exactly why Matt wanted to build something better.</p>
+            `
+        },
+        'claude': {
+            title: 'Claude',
+            content: `
+                <p><strong>An AI assistant made by Anthropic.</strong></p>
+                <p>Matt used Claude to build the PAL demo. He described what he needed in plain English, and Claude wrote the code.</p>
+                <p>No programming knowledge required. Just clear descriptions of the problem and what the solution should look like.</p>
+            `
+        },
+        'mobile-phones': {
+            title: 'Mobile Phone Policy',
+            content: `
+                <p>One of the most common policy questions in Victorian schools.</p>
+                <p><strong>Short version:</strong> Students must have phones switched off and securely stored during school hours.</p>
+                <p>It's a good example of something simple that's buried deep in PAL — exactly the kind of thing iTabs helps with.</p>
+            `
+        },
+        'vibe-coding': {
+            title: 'Vibe Coding',
+            content: `
+                <p><strong>Building things with AI instead of traditional coding skills.</strong></p>
+                <p>You describe what you want in plain language. AI helps you build it. You refine until it works.</p>
+                <p>No syntax memorisation. No computer science degree. No dev team required.</p>
+                <p><strong>The key:</strong> You still need to understand the problem. AI handles the "how". You handle the "why".</p>
+            `
+        },
+        'the-point': {
+            title: 'The Whole Point',
+            content: `
+                <p>For decades, building software required specialised skills. If you had a problem, you needed to convince a developer to solve it.</p>
+                <p>Now? <strong>The people closest to the problem can build the solution themselves.</strong></p>
+                <p>Matt knows PAL's problems better than any developer. So Matt built the solution. That's how it should work.</p>
+            `
+        },
+        'github': {
+            title: 'GitHub Pages',
+            content: `
+                <p><strong>Free website hosting.</strong></p>
+                <p>Upload an HTML file, turn on Pages in settings, and you've got a live website in under 2 minutes.</p>
+                <p>No servers. No domain costs. No technical setup.</p>
+                <p>Matt's demo is live at:<br><a href="https://boilermaker-innovator.github.io/My-pal/" target="_blank">boilermaker-innovator.github.io/My-pal</a></p>
+            `
+        },
+        'it-dept': {
+            title: 'Showing IT',
+            content: `
+                <p>This is the moment that matters.</p>
+                <p>Matt's not going to IT with a feature request or a complaint. He's going with a <strong>working solution</strong>.</p>
+                <p>"Here's the problem. Here's something that fixes it. I built it over the weekend."</p>
+                <p>That's a very different conversation.</p>
+            `
+        },
+        'why-matters': {
+            title: 'Why This Matters',
+            content: `
+                <p><strong>The gatekeepers are gone.</strong></p>
+                <p>You used to need:</p>
+                <ul>
+                    <li>A developer (expensive)</li>
+                    <li>A project budget (slow approval)</li>
+                    <li>Months of development time</li>
+                </ul>
+                <p>Now you need:</p>
+                <ul>
+                    <li>A clear understanding of the problem</li>
+                    <li>The ability to describe what you want</li>
+                    <li>A conversation with AI</li>
+                </ul>
+                <p>Matt built a working prototype in one sitting. That changes everything.</p>
+            `
         }
     };
 
-    // Carousel State
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.nav-dot');
-    let autoplayInterval;
-
-    // Go to specific slide
-    function goToSlide(index) {
-        slides.forEach(s => s.classList.remove('active'));
-        dots.forEach(d => d.classList.remove('active'));
-        
-        currentSlide = index;
-        slides[index].classList.add('active');
-        dots[index].classList.add('active');
+    function openPopup(id) {
+        const content = itabsContent[id];
+        if (!content) return;
+        document.getElementById('popupTitle').textContent = content.title;
+        document.getElementById('popupContent').innerHTML = content.content;
+        document.getElementById('popupOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
-
-    // Next slide
-    function nextSlide() {
-        const next = (currentSlide + 1) % slides.length;
-        goToSlide(next);
-    }
-
-    // Previous slide
-    function prevSlide() {
-        const prev = (currentSlide - 1 + slides.length) % slides.length;
-        goToSlide(prev);
-    }
-
-    // Dot navigation
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            goToSlide(index);
-            resetAutoplay();
-        });
-    });
-
-    // Touch/Swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-    const carousel = document.getElementById('carousel');
-
-    carousel.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    carousel.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    }, { passive: true });
-
-    function handleSwipe() {
-        const diff = touchStartX - touchEndX;
-        if (Math.abs(diff) > 50) {
-            if (diff > 0) {
-                nextSlide();
-            } else {
-                prevSlide();
-            }
-            resetAutoplay();
-        }
-    }
-
-    // Autoplay
-    function startAutoplay() {
-        autoplayInterval = setInterval(nextSlide, 4000);
-    }
-
-    function resetAutoplay() {
-        clearInterval(autoplayInterval);
-        startAutoplay();
-    }
-
-    startAutoplay();
-
-    // Popup functionality
-    const infoBtn = document.getElementById('infoBtn');
-    const popupOverlay = document.getElementById('popupOverlay');
-    const popupContent = document.getElementById('popupContent');
-
-    infoBtn.addEventListener('click', () => {
-        const activeSlide = document.querySelector('.slide.active');
-        const serviceKey = activeSlide.dataset.service;
-        const service = services[serviceKey];
-        
-        let html = `
-            <div class="popup-header">
-                <button class="popup-close" id="closePopup">×</button>
-                <div class="popup-service-title">${service.title}</div>
-            </div>
-            <div class="popup-body">
-        `;
-
-        service.sections.forEach(section => {
-            html += `<div class="info-section">`;
-            html += `<div class="info-label">${section.label}</div>`;
-            
-            if (section.type === 'list') {
-                html += `<ul class="info-list">`;
-                section.items.forEach(item => {
-                    html += `<li>${item}</li>`;
-                });
-                html += `</ul>`;
-            } else {
-                html += `<div class="info-content">${section.content}</div>`;
-            }
-            
-            html += `</div>`;
-        });
-
-        // Add experience badge
-        html += `
-            <div class="experience-badge">
-                <div class="exp-number">20+</div>
-                <div class="exp-text">Years of hands-on<br>industry experience</div>
-            </div>
-        `;
-
-        // Add contact info
-        html += `
-            <div class="info-section" style="margin-top: 20px;">
-                <div class="info-label">Get In Touch</div>
-                <div class="contact-row">
-                    <div class="contact-icon">📞</div>
-                    <div class="contact-text"><a href="tel:0466681370">0466 681 370</a></div>
-                </div>
-                <div class="contact-row">
-                    <div class="contact-icon">🌐</div>
-                    <div class="contact-text"><a href="https://www.baratec.com.au" target="_blank">www.baratec.com.au</a></div>
-                </div>
-            </div>
-        `;
-
-        html += `
-                <a href="https://www.baratec.com.au/contact" target="_blank" class="popup-cta">
-                    Enquire Online →
-                </a>
-            </div>
-        `;
-
-        popupContent.innerHTML = html;
-        popupOverlay.classList.add('active');
-
-        // Close button
-        document.getElementById('closePopup').addEventListener('click', closePopup);
-    });
 
     function closePopup() {
-        popupOverlay.classList.remove('active');
+        document.getElementById('popupOverlay').classList.remove('active');
+        document.body.style.overflow = '';
     }
 
-    // Close on overlay click
-    popupOverlay.addEventListener('click', (e) => {
-        if (e.target === popupOverlay) {
-            closePopup();
-        }
+    document.querySelectorAll('.itabs-btn[data-popup]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openPopup(btn.dataset.popup);
+        });
     });
 
-    // Close on escape key
+    document.getElementById('popupOverlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closePopup();
+    });
+
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closePopup();
-        }
-    });
-
-    // Small iTabs branding button
-    document.querySelector('.itabs-branding-btn').addEventListener('click', () => {
-        popupContent.innerHTML = `
-            <div class="popup-header" style="background: linear-gradient(90deg, #3B82F6, #2563EB);">
-                <button class="popup-close" id="closePopup">×</button>
-                <div class="popup-service-title">What is iTabs?</div>
-            </div>
-            <div class="popup-body">
-                <div class="info-section">
-                    <div class="info-label">Information Enhancement</div>
-                    <div class="info-content">
-                        iTabs turns complex information into visual, interactive experiences. 
-                        Instead of walls of text, users see images first - then tap the "i" button 
-                        to reveal organized details when they're ready.
-                    </div>
-                </div>
-                <div class="info-section">
-                    <div class="info-label">Perfect For</div>
-                    <ul class="info-list">
-                        <li>Business websites & services</li>
-                        <li>Product showcases</li>
-                        <li>Crowdfunding campaigns</li>
-                        <li>Anything that needs explaining</li>
-                    </ul>
-                </div>
-                <a href="https://itabs.ai" target="_blank" class="popup-cta" style="background: linear-gradient(90deg, #3B82F6, #2563EB);">
-                    Create Your Own iTabs →
-                </a>
-            </div>
-        `;
-        popupOverlay.classList.add('active');
-        document.getElementById('closePopup').addEventListener('click', closePopup);
+        if (e.key === 'Escape') closePopup();
     });
 </script>
 ```
