@@ -1,802 +1,1118 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Melbourne Moment | How Matt Built His Own Tool</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Ralph Loop & TUI Guide - Advanced Claude Code Autonomy</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --melb-blue: #0A2342;
-            --melb-teal: #2CA6A4;
-            --coffee-brown: #6F4E37;
-            --cream: #FDF8F0;
-            --text: #2C2416;
-            --itabs-blue: #0066CC;
-            --itabs-glow: rgba(0, 102, 204, 0.3);
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --bg-hover: #21262d;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-purple: #a371f7;
+            --accent-orange: #d29922;
+            --accent-red: #f85149;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --border: #30363d;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+```
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+        background: var(--bg-dark);
+        color: var(--text-primary);
+        min-height: 100vh;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    header {
+        text-align: center;
+        padding: 40px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 40px;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+    
+    .level-badge {
+        display: inline-block;
+        background: var(--accent-red);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 15px;
+    }
+    
+    .personal-note {
+        background: var(--bg-card);
+        border-left: 4px solid var(--accent-green);
+        padding: 15px 20px;
+        margin-bottom: 30px;
+        border-radius: 0 8px 8px 0;
+    }
+    
+    .personal-note p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+    
+    .warning-box {
+        background: rgba(248, 81, 73, 0.1);
+        border: 1px solid var(--accent-red);
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 30px;
+    }
+    
+    .warning-box h4 {
+        color: var(--accent-red);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .warning-box p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    .itab-section {
+        background: var(--bg-card);
+        border-radius: 12px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+    
+    .itab-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    
+    .itab-header:hover {
+        background: var(--bg-hover);
+    }
+    
+    .itab-title {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .itab-number {
+        width: 36px;
+        height: 36px;
+        background: var(--accent-orange);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+    
+    .itab-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    
+    .itab-badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+        background: var(--bg-hover);
+        color: var(--text-secondary);
+    }
+    
+    .i-button {
+        width: 32px;
+        height: 32px;
+        background: var(--accent-orange);
+        border: none;
+        border-radius: 50%;
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: serif;
+        font-style: italic;
+    }
+    
+    .i-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(210, 153, 34, 0.5);
+    }
+    
+    .i-button.active {
+        background: var(--accent-green);
+    }
+    
+    .itab-content {
+        display: none;
+        padding: 0 20px 20px;
+        border-top: 1px solid var(--border);
+    }
+    
+    .itab-content.show {
+        display: block;
+    }
+    
+    .tabs {
+        display: flex;
+        gap: 5px;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .tab {
+        padding: 8px 16px;
+        background: var(--bg-hover);
+        border: none;
+        border-radius: 6px;
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    
+    .tab:hover {
+        color: var(--text-primary);
+    }
+    
+    .tab.active {
+        background: var(--accent-orange);
+        color: white;
+    }
+    
+    .tab-panel {
+        display: none;
+    }
+    
+    .tab-panel.show {
+        display: block;
+    }
+    
+    .tab-panel h3 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        color: var(--accent-orange);
+    }
+    
+    .tab-panel p {
+        color: var(--text-secondary);
+        margin-bottom: 15px;
+    }
+    
+    .tab-panel ul, .tab-panel ol {
+        margin-left: 20px;
+        color: var(--text-secondary);
+    }
+    
+    .tab-panel li {
+        margin-bottom: 10px;
+    }
+    
+    .tab-panel li strong {
+        color: var(--text-primary);
+    }
+    
+    code {
+        font-family: 'JetBrains Mono', monospace;
+        background: var(--bg-dark);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        color: var(--accent-green);
+    }
+    
+    pre {
+        background: var(--bg-dark);
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 15px 0;
+        border: 1px solid var(--border);
+    }
+    
+    pre code {
+        background: none;
+        padding: 0;
+    }
+    
+    .jons-note {
+        background: linear-gradient(135deg, rgba(63, 185, 80, 0.1), rgba(88, 166, 255, 0.1));
+        border: 1px solid var(--accent-green);
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .jons-note-label {
+        font-weight: 600;
+        color: var(--accent-green);
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+    
+    .jons-note p {
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+    
+    .smart-link {
+        color: var(--accent-blue);
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-underline-offset: 3px;
+    }
+    
+    .smart-link:hover {
+        color: var(--accent-purple);
+    }
+    
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .comparison-table th {
+        color: var(--accent-orange);
+        font-weight: 600;
+    }
+    
+    .comparison-table td {
+        color: var(--text-secondary);
+    }
+    
+    .flow-diagram {
+        background: var(--bg-dark);
+        padding: 20px;
+        border-radius: 8px;
+        margin: 15px 0;
+        text-align: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        overflow-x: auto;
+    }
+    
+    .flow-step {
+        display: inline-block;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin: 5px;
+    }
+    
+    .flow-arrow {
+        color: var(--accent-orange);
+        margin: 0 5px;
+    }
+    
+    footer {
+        text-align: center;
+        padding: 40px 20px;
+        border-top: 1px solid var(--border);
+        margin-top: 40px;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    footer a {
+        color: var(--accent-blue);
+        text-decoration: none;
+    }
+    
+    /* Link Popup Styles */
+    .link-popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+    }
+    
+    .link-popup-overlay.show {
+        display: flex;
+    }
+    
+    .link-popup {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        max-width: 500px;
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .link-popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .link-popup-header h3 {
+        color: var(--accent-orange);
+        font-size: 1.1rem;
+    }
+    
+    .link-popup-close {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        line-height: 1;
+    }
+    
+    .link-popup-body {
+        padding: 20px;
+    }
+    
+    .link-popup-section {
+        margin-bottom: 15px;
+    }
+    
+    .link-popup-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .link-popup-text {
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+    
+    .link-popup-url {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: var(--accent-blue);
+        word-break: break-all;
+    }
+    
+    .link-popup-actions {
+        display: flex;
+        gap: 10px;
+        padding: 20px;
+        border-top: 1px solid var(--border);
+    }
+    
+    .link-popup-btn {
+        flex: 1;
+        padding: 12px 20px;
+        border-radius: 6px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+    }
+    
+    .link-popup-btn-secondary {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+    }
+    
+    .link-popup-btn-primary {
+        background: var(--accent-orange);
+        color: white;
+    }
+</style>
+```
 
-        body {
-            font-family: 'Source Sans 3', sans-serif;
-            background: var(--cream);
-            color: var(--text);
-            line-height: 1.8;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--melb-blue) 0%, #1a3a5c 100%);
-            padding: 3rem 2rem;
-            text-align: center;
-            color: white;
-        }
-
-        .header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 0.5rem;
-        }
-
-        .header h1 span {
-            color: var(--melb-teal);
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 550px;
-            margin: 0 auto;
-        }
-
-        .header-note {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        .header-note p {
-            margin: 0;
-            font-size: 0.95rem;
-        }
-
-        .story {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-        }
-
-        .story-section {
-            margin-bottom: 3rem;
-        }
-
-        .story h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            color: var(--melb-blue);
-            margin-bottom: 1rem;
-        }
-
-        .story p {
-            margin-bottom: 1.25rem;
-            font-size: 1.05rem;
-        }
-
-        .dialogue {
-            background: white;
-            border-left: 4px solid var(--coffee-brown);
-            padding: 1rem 1.25rem;
-            margin: 1.5rem 0;
-            border-radius: 0 8px 8px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        .dialogue.jon {
-            border-left-color: var(--itabs-blue);
-        }
-
-        .dialogue.matt {
-            border-left-color: var(--melb-teal);
-        }
-
-        .dialogue .speaker {
-            font-weight: 600;
-            color: var(--coffee-brown);
-            margin-bottom: 0.25rem;
-            font-size: 0.9rem;
-        }
-
-        .dialogue.jon .speaker {
-            color: var(--itabs-blue);
-        }
-
-        .dialogue.matt .speaker {
-            color: var(--melb-teal);
-        }
-
-        .dialogue p {
-            margin: 0;
-            font-style: italic;
-        }
-
-        .location-tag {
-            display: inline-block;
-            background: var(--melb-blue);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .highlight-box {
-            background: linear-gradient(135deg, #E8F7F7, #D0F0EF);
-            border: 2px solid var(--melb-teal);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .highlight-box h3 {
-            color: var(--melb-teal);
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 0.75rem;
-        }
-
-        .highlight-box p {
-            margin-bottom: 0.75rem;
-        }
-
-        .highlight-box p:last-child {
-            margin-bottom: 0;
-        }
-
-        .demo-link-box {
-            background: linear-gradient(135deg, var(--itabs-blue), #0052a3);
-            color: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
-        }
-
-        .demo-link-box h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .demo-link-box p {
-            margin-bottom: 1rem;
-            opacity: 0.95;
-        }
-
-        .demo-link-box a {
-            display: inline-block;
-            background: white;
-            color: var(--itabs-blue);
-            padding: 0.875rem 2rem;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .demo-link-box a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 2rem;
-            border-left: 3px solid var(--melb-teal);
-            margin: 2rem 0;
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px dashed #ddd;
-        }
-
-        .timeline-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -2rem;
-            top: 0.5rem;
-            width: 12px;
-            height: 12px;
-            background: var(--melb-teal);
-            border-radius: 50%;
-            transform: translateX(-50%);
-        }
-
-        .timeline-time {
-            font-weight: 600;
-            color: var(--melb-teal);
-            font-size: 0.9rem;
-        }
-
-        .itabs-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            background: var(--itabs-blue);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 13px;
-            font-weight: 700;
-            font-style: italic;
-            font-family: Georgia, serif;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px var(--itabs-glow);
-            vertical-align: middle;
-            margin: 0 2px;
-        }
-
-        .itabs-btn:hover {
-            transform: scale(1.15);
-            box-shadow: 0 4px 15px var(--itabs-glow);
-        }
-
-        .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 35, 66, 0.85);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-            backdrop-filter: blur(4px);
-        }
-
-        .popup-overlay.active {
-            display: flex;
-        }
-
-        .popup {
-            background: white;
-            color: var(--text);
-            border-radius: 12px;
-            max-width: 420px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            animation: popupIn 0.3s ease;
-        }
-
-        @keyframes popupIn {
-            from { opacity: 0; transform: scale(0.9) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .popup-header {
-            background: var(--itabs-blue);
-            color: white;
-            padding: 1rem 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .popup-header h4 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-        }
-
-        .popup-close {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .popup-close:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .popup-content {
-            padding: 1.25rem;
-        }
-
-        .popup-content p {
-            margin-bottom: 0.75rem;
-            line-height: 1.6;
-        }
-
-        .popup-content strong {
-            color: var(--itabs-blue);
-        }
-
-        .popup-content ul, .popup-content ol {
-            margin: 0.75rem 0;
-            padding-left: 1.25rem;
-        }
-
-        .popup-content li {
-            margin-bottom: 0.4rem;
-        }
-
-        .popup-content a {
-            color: var(--itabs-blue);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .popup-content a:hover {
-            text-decoration: underline;
-        }
-
-        .footer {
-            background: var(--melb-blue);
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .footer p {
-            opacity: 0.7;
-            font-size: 0.9rem;
-        }
-
-        .footer a {
-            color: var(--melb-teal);
-        }
-
-        .emoji-big {
-            font-size: 3rem;
-            display: block;
-            text-align: center;
-            margin: 1rem 0;
-        }
-    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>🔄 Ralph Loop & TUI Guide</h1>
+            <p class="subtitle">Autonomous AI Development - Let Claude Code Work While You Sleep</p>
+            <span class="level-badge">⚡ ADVANCED</span>
+        </header>
 
-    <header class="header">
-        <h1>🍺 Melbourne Moment: <span>Matt Builds Something Useful</span></h1>
-        <p>Jon went to get beers. Came back to a working prototype.</p>
-        <div class="header-note">
-            <p>👆 Click the blue <button class="itabs-btn" data-popup="what-is-itabs">i</button> buttons to see iTabs in action throughout this story</p>
+```
+    <div class="personal-note">
+        <p><strong>What this is:</strong> Ralph Loop is a technique that keeps Claude Code running in a loop - it keeps trying until your task is actually done. Named after Ralph Wiggum from The Simpsons because it "stubbornly keeps iterating, failing repeatedly but never gives up." Ralph TUI adds a visual terminal interface to manage it all.</p>
+    </div>
+    
+    <div class="warning-box">
+        <h4>⚠️ Token Warning</h4>
+        <p>Autonomous loops burn through API credits FAST. A 50-iteration loop on a big codebase can easily cost $50-100+. Always set <code>--max-iterations</code> conservatively and monitor your usage. Start small!</p>
+    </div>
+    
+    <!-- Section 1: The Concept -->
+    <div class="itab-section">
+        <div class="itab-header" onclick="toggleSection(this)">
+            <div class="itab-title">
+                <span class="itab-number">1</span>
+                <span class="itab-name">What Is Ralph Loop?</span>
+                <span class="itab-badge">CONCEPT</span>
+            </div>
+            <button class="i-button">i</button>
         </div>
-    </header>
-
-    <main class="story">
-
-        <section class="story-section">
-            <span class="location-tag">📍 Melbourne, Victoria</span>
-            <h2>The Catch-Up</h2>
-            
-            <p>Jon's in Melbourne on holiday <button class="itabs-btn" data-popup="melbourne">i</button>. Catches up with Matt — a consultant working for the Victorian Department of Education <button class="itabs-btn" data-popup="matt">i</button>. His job? Improving processes with schools. Beers. Pub. The usual.</p>
-
-            <p>Jon starts showing him this thing he's been building called iTabs <button class="itabs-btn" data-popup="itabs">i</button>. Little blue buttons that explain confusing stuff. Click, get the info, keep going.</p>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"That's actually... really simple. Could this work for the stuff we deal with at school?"</p>
+        <div class="itab-content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(this, 'concept-1')">Simple Explanation</button>
+                <button class="tab" onclick="showTab(this, 'how-it-works-1')">How It Works</button>
+                <button class="tab" onclick="showTab(this, 'why-use-1')">Why Use It</button>
             </div>
-
-            <div class="dialogue jon">
-                <div class="speaker">JON</div>
-                <p>"What kind of stuff?"</p>
-            </div>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"PAL <button class="itabs-btn" data-popup="pal">i</button>. The Policy and Advisory Library. It's where all our school policies live. Hundreds of them. And honestly? Most staff just give up trying to find anything."</p>
-            </div>
-
-            <p>Jon opened Claude on his laptop, showed Matt the basics. Then the glasses were empty.</p>
-
-            <div class="dialogue jon">
-                <div class="speaker">JON</div>
-                <p>"I'll grab us another round. Have a go yourself — just describe what you need."</p>
-            </div>
-
-            <p>Jon headed to the bar.</p>
-        </section>
-
-        <section class="story-section">
-            <h2>The Build</h2>
-
-            <p>Jon came back with two beers.</p>
-
-            <p>Matt had already built half of it.</p>
-
-            <div class="dialogue jon">
-                <div class="speaker">JON</div>
-                <p>"...mate, what did you do?"</p>
-            </div>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"I just described what teachers need. Categories, search box, links to the actual policies. It just... built it?"</p>
-            </div>
-
-            <p>Matt had typed prompts in plain English. Described the categories — HR, student safety, excursions, mobile phones <button class="itabs-btn" data-popup="mobile-phones">i</button>. Explained what teachers always complain about. Asked for a search box where staff could ask questions like normal humans.</p>
-
-            <p>Claude <button class="itabs-btn" data-popup="claude">i</button> built it. Piece by piece. Matt gave feedback. Claude refined. All while Jon was waiting at the bar.</p>
-
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-time">While Jon ordered</div>
-                    <p>Matt got the basic structure with category cards</p>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-time">While Jon waited for the pour</div>
-                    <p>AI search box added — ask questions, get answers</p>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-time">While Jon paid</div>
-                    <p>Real hyperlinks to actual PAL policies</p>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-time">While Jon walked back</div>
-                    <p>Clickable category lists with individual policy links</p>
+            <div class="tab-panel show" id="concept-1">
+                <h3>Ralph Loop in Plain English</h3>
+                <p>Normally when you give Claude Code a task, it does one pass and stops - even if it didn't fully finish. Ralph Loop changes that.</p>
+                <p><strong>The idea:</strong> When Claude tries to exit, Ralph intercepts it and says "nope, try again" - feeding the same prompt back. Claude sees the files it just changed, so each loop builds on the last.</p>
+                <p>It keeps going until either:</p>
+                <ul>
+                    <li>It meets your success criteria (you define what "done" looks like)</li>
+                    <li>It hits your max iteration limit (your safety net)</li>
+                </ul>
+                <div class="flow-diagram">
+                    <span class="flow-step">Give Task</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Claude Works</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Tries to Exit</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Ralph Blocks</span>
+                    <span class="flow-arrow">→</span>
+                    <span class="flow-step">Loop Again</span>
                 </div>
             </div>
+            <div class="tab-panel" id="how-it-works-1">
+                <h3>The Technical Bit</h3>
+                <p>At its core, Ralph is literally just a bash loop. Geoffrey Huntley (who invented this) described it simply:</p>
+                <pre><code># The original Ralph - dead simple
+```
 
-            <div class="dialogue jon">
-                <div class="speaker">JON</div>
-                <p>"I was gone for like five minutes."</p>
+while true; do
+claude “Your prompt here”
+done</code></pre>
+<p>The official Claude Code plugin wraps this with better controls:</p>
+<ul>
+<li><strong>Stop hook</strong> - Intercepts Claude’s exit and re-feeds the prompt</li>
+<li><strong>Completion detection</strong> - Looks for your success token like <code><promise>COMPLETE</promise></code></li>
+<li><strong>Max iterations</strong> - Safety limit so it doesn’t run forever</li>
+<li><strong>Session persistence</strong> - Can pause/resume without losing progress</li>
+</ul>
+</div>
+<div class="tab-panel" id="why-use-1">
+<h3>When Ralph Loop Shines</h3>
+<p><strong>Best for mechanical, well-defined tasks:</strong></p>
+<ul>
+<li><strong>Large refactors</strong> - Framework migrations, dependency upgrades across hundreds of files</li>
+<li><strong>Test coverage</strong> - “Add tests until we hit 80% coverage”</li>
+<li><strong>Batch operations</strong> - Update every API endpoint to new format</li>
+<li><strong>Bug hunting</strong> - Keep fixing until all tests pass</li>
+<li><strong>Documentation</strong> - Document every function in codebase</li>
+</ul>
+<p><strong>NOT good for:</strong></p>
+<ul>
+<li>Tasks requiring human judgment at each step</li>
+<li>Creative work where direction might change</li>
+<li>Anything where you can’t define clear “done” criteria</li>
+</ul>
+<div class="jons-note">
+<div class="jons-note-label">💡 The Philosophy</div>
+<p>“Better to fail predictably than succeed unpredictably.” - Geoffrey Huntley. Each failure teaches Claude something. The skill shifts from directing step-by-step to writing prompts that converge toward correct solutions.</p>
+</div>
+</div>
+</div>
+</div>
+
+```
+    <!-- Section 2: Ralph vs Ralph TUI -->
+    <div class="itab-section">
+        <div class="itab-header" onclick="toggleSection(this)">
+            <div class="itab-title">
+                <span class="itab-number">2</span>
+                <span class="itab-name">Ralph Loop vs Ralph TUI</span>
+                <span class="itab-badge">COMPARISON</span>
             </div>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"Yeah. Is it meant to be this easy?"</p>
-            </div>
-
-            <div class="dialogue jon">
-                <div class="speaker">JON</div>
-                <p>"Welcome to vibe coding <button class="itabs-btn" data-popup="vibe-coding">i</button>, mate."</p>
-            </div>
-        </section>
-
-        <div class="highlight-box">
-            <h3><button class="itabs-btn" data-popup="the-point">i</button> The Point</h3>
-            <p>Matt's not a developer. Never written code. First time using AI like this.</p>
-            <p>Jon went to get beers. Came back to a working prototype.</p>
-            <p><strong>That's the whole idea.</strong> The people closest to the problem should be able to build the solution. No hand-holding required.</p>
+            <button class="i-button">i</button>
         </div>
-
-        <section class="story-section">
-            <h2>The Result</h2>
-
-            <p>They finished their beers polishing it up. Added a few more iTabs. Tweaked the layout.</p>
-
-            <p>Jon uploaded it to GitHub <button class="itabs-btn" data-popup="github">i</button>. Two minutes later — live URL.</p>
-
-            <div class="demo-link-box">
-                <h3>🎯 What Matt Built</h3>
-                <p>A working PAL demo with AI search, clickable categories, and iTabs throughout</p>
-                <a href="https://boilermaker-innovator.github.io/My-pal/" target="_blank">View Matt's Demo →</a>
+        <div class="itab-content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(this, 'diff-2')">Key Differences</button>
+                <button class="tab" onclick="showTab(this, 'choose-2')">Which to Choose</button>
             </div>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"So I can just... show this to people? It's live?"</p>
+            <div class="tab-panel show" id="diff-2">
+                <h3>Two Tools, Different Purposes</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Feature</th>
+                        <th>Ralph Loop (Plugin)</th>
+                        <th>Ralph TUI</th>
+                    </tr>
+                    <tr>
+                        <td>What it is</td>
+                        <td>Claude Code plugin</td>
+                        <td>Standalone terminal app</td>
+                    </tr>
+                    <tr>
+                        <td>Install</td>
+                        <td><code>/plugin install ralph-wiggum</code></td>
+                        <td><code>bun install -g ralph-tui</code></td>
+                    </tr>
+                    <tr>
+                        <td>Task management</td>
+                        <td>Single prompt loop</td>
+                        <td>Full task list with PRD</td>
+                    </tr>
+                    <tr>
+                        <td>Visibility</td>
+                        <td>Terminal output only</td>
+                        <td>Visual dashboard</td>
+                    </tr>
+                    <tr>
+                        <td>Multi-agent</td>
+                        <td>No</td>
+                        <td>Yes - run multiple agents</td>
+                    </tr>
+                    <tr>
+                        <td>Best for</td>
+                        <td>Single focused tasks</td>
+                        <td>Complex multi-task projects</td>
+                    </tr>
+                </table>
             </div>
-
-            <div class="dialogue jon">
-                <div class="speaker">JON</div>
-                <p>"It's live. Send the link to whoever you want."</p>
+            <div class="tab-panel" id="choose-2">
+                <h3>Quick Decision Guide</h3>
+                <p><strong>Use Ralph Loop (plugin) when:</strong></p>
+                <ul>
+                    <li>You have ONE specific task to loop on</li>
+                    <li>Task is well-defined with clear completion criteria</li>
+                    <li>You don't need to track multiple sub-tasks</li>
+                    <li>Example: "Migrate all Jest tests to Vitest"</li>
+                </ul>
+                <p><strong>Use Ralph TUI when:</strong></p>
+                <ul>
+                    <li>You're building something with multiple features</li>
+                    <li>You want to see real-time progress visually</li>
+                    <li>You need to pause/resume complex work</li>
+                    <li>You want to run multiple agents at once</li>
+                    <li>Example: "Build a complete second-brain app"</li>
+                </ul>
+                <div class="jons-note">
+                    <div class="jons-note-label">💡 Starting Point</div>
+                    <p>If you're new to this, start with the Ralph Loop plugin on a small task. Get comfortable with autonomous loops before jumping to Ralph TUI's multi-agent orchestration.</p>
+                </div>
             </div>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"I'm showing this to IT on Monday."</p>
-            </div>
-        </section>
-
-        <section class="story-section">
-            <h2>The Millions Dollar Question</h2>
-
-            <p>Matt went quiet for a moment. Then:</p>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"You know how much the department pays for Salesforce? <button class="itabs-btn" data-popup="salesforce">i</button>"</p>
-            </div>
-
-            <div class="dialogue jon">
-                <div class="speaker">JON</div>
-                <p>"How much?"</p>
-            </div>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"Millions. Literally millions. And we just built something useful while having beers."</p>
-            </div>
-
-            <p>They both sat with that for a second.</p>
-
-            <p>Millions in enterprise software contracts. Months of procurement. Teams of consultants. And here's Matt — first time using AI — building a working tool between rounds.</p>
-
-            <div class="dialogue jon">
-                <div class="speaker">JON</div>
-                <p>"Mate, you need to get Claude. Even if it's just for your own career. <button class="itabs-btn" data-popup="career">i</button>"</p>
-            </div>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"Yeah... I think I do."</p>
-            </div>
-        </section>
-
-        <div class="highlight-box">
-            <h3><button class="itabs-btn" data-popup="disruption">i</button> The Disruption</h3>
-            <p>Enterprise software costs millions. Takes months to implement. Requires specialists to configure.</p>
-            <p>Matt built a useful tool in the time it took Jon to get beers.</p>
-            <p><strong>The gap between "enterprise solution" and "actually useful" has never been wider.</strong></p>
-        </div>
-
-        <section class="story-section">
-            <h2>Monday Morning</h2>
-
-            <p>Picture it: Matt walks into his school's IT department <button class="itabs-btn" data-popup="it-dept">i</button>.</p>
-
-            <div class="dialogue matt">
-                <div class="speaker">MATT</div>
-                <p>"Hey, I made something over the weekend. It makes PAL actually usable."</p>
-            </div>
-
-            <p>They'll ask how he built it. He'll say he just described what he needed and AI did the rest.</p>
-
-            <p>No procurement process. No vendor meetings. No six-month project timeline. No budget approval.</p>
-
-            <p>Just a bloke who knows the problem, a coffee with a mate, and a few prompts.</p>
-
-            <span class="emoji-big">🚀</span>
-        </section>
-
-        <div class="highlight-box">
-            <h3><button class="itabs-btn" data-popup="why-matters">i</button> Why This Matters</h3>
-            <p>This isn't about one demo for one school.</p>
-            <p>It's proof that <strong>the people who understand problems can now build solutions</strong> — without needing to be developers, without needing budget approval, without waiting for IT.</p>
-            <p>Matt built a working tool over coffee. On a weekend. And it's live on the internet right now.</p>
-        </div>
-
-        <section class="story-section">
-            <h2>Try It Yourself</h2>
-
-            <p>Click the link below to see what Matt built. Click the blue <button class="itabs-btn" data-popup="itabs">i</button> buttons. Ask a question in the search box. Browse the categories.</p>
-
-            <p>Then imagine what you could build for your workplace.</p>
-
-            <div class="demo-link-box">
-                <h3>👀 See Matt's PAL Demo</h3>
-                <p>Built in one conversation. Live on the internet. Ready to show IT.</p>
-                <a href="https://boilermaker-innovator.github.io/My-pal/" target="_blank">Open the Demo →</a>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="footer">
-        <p>Built with 🍺 in Melbourne | Powered by <a href="https://itabs.ai" target="_blank">iTabs</a></p>
-    </footer>
-
-    <div class="popup-overlay" id="popupOverlay">
-        <div class="popup">
-            <div class="popup-header">
-                <h4 id="popupTitle">Info</h4>
-                <button class="popup-close" onclick="closePopup()">×</button>
-            </div>
-            <div class="popup-content" id="popupContent"></div>
         </div>
     </div>
+    
+    <!-- Section 3: Ralph Loop Setup -->
+    <div class="itab-section">
+        <div class="itab-header" onclick="toggleSection(this)">
+            <div class="itab-title">
+                <span class="itab-number">3</span>
+                <span class="itab-name">Ralph Loop (Plugin) Setup</span>
+                <span class="itab-badge">QUICK START</span>
+            </div>
+            <button class="i-button">i</button>
+        </div>
+        <div class="itab-content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(this, 'install-3')">Install</button>
+                <button class="tab" onclick="showTab(this, 'basic-3')">Basic Usage</button>
+                <button class="tab" onclick="showTab(this, 'prompts-3')">Prompt Templates</button>
+            </div>
+            <div class="tab-panel show" id="install-3">
+                <h3>Installation (30 seconds)</h3>
+                <p><strong>Prerequisite:</strong> You need <span class="smart-link" onclick="showLinkPopup('claude-code')">Claude Code CLI</span> installed first.</p>
+                <p><strong>Install the plugin:</strong></p>
+                <pre><code>/plugin install ralph-wiggum</code></pre>
+                <p>That's it. The plugin is now available in your Claude Code sessions.</p>
+            </div>
+            <div class="tab-panel" id="basic-3">
+                <h3>Running Your First Loop</h3>
+                <p><strong>Basic command structure:</strong></p>
+                <pre><code>/ralph-loop "Your prompt here" --max-iterations 30 --completion-promise "COMPLETE"</code></pre>
+                <p><strong>What the flags mean:</strong></p>
+                <ul>
+                    <li><code>--max-iterations 30</code> - Safety limit (adjust based on task size)</li>
+                    <li><code>--completion-promise "COMPLETE"</code> - The token Claude outputs when done</li>
+                </ul>
+                <p><strong>Example - migrate tests:</strong></p>
+                <pre><code>/ralph-loop "Migrate all tests from Jest to Vitest. 
+```
 
-    <script>
-        const itabsContent = {
-            'what-is-itabs': {
-                title: 'What is iTabs?',
-                content: `
-                    <p><strong>iTabs = Information Enhancement Technology</strong></p>
-                    <p>Those little blue "i" buttons you're clicking right now? That's iTabs.</p>
-                    <p>Click one → get the info you need → keep reading.</p>
-                    <p>The whole point is to put helpful information exactly where the confusion happens.</p>
-                `
-            },
-            'melbourne': {
-                title: 'Melbourne, Victoria',
-                content: `
-                    <p>Australia's second-largest city. Home to coffee culture, laneways, and apparently productive pub sessions.</p>
-                    <p>Jon's normally based in Perth but was visiting Melbourne when he caught up with Matt.</p>
-                `
-            },
-            'matt': {
-                title: 'Matt — Education Consultant',
-                content: `
-                    <p><strong>Matt works as a consultant for the Victorian Department of Education.</strong></p>
-                    <p>His job is improving processes with schools — helping them work better, more efficiently.</p>
-                    <p>He sees firsthand how teachers struggle with systems that are meant to help them. PAL is one of those systems.</p>
-                    <p>Not a developer. Never used AI to build anything before this beer.</p>
-                `
-            },
-            'itabs': {
-                title: 'iTabs',
-                content: `
-                    <p><strong>Information Enhancement Technology</strong></p>
-                    <p>A simple concept: put a little blue button next to anything confusing. Click it, get an explanation in plain English.</p>
-                    <p>Works on mobile. Doesn't require apps or logins. Just helpful information exactly when you need it.</p>
-                    <p><a href="https://itabs.ai" target="_blank">Learn more at itabs.ai →</a></p>
-                `
-            },
-            'pal': {
-                title: 'PAL — Policy and Advisory Library',
-                content: `
-                    <p><strong>The Victorian government's policy database for schools.</strong></p>
-                    <p>Contains hundreds of policies covering everything from excursions to anaphylaxis to mobile phone rules.</p>
-                    <p>Essential for school staff. Also notoriously hard to navigate — which is exactly why Matt wanted to build something better.</p>
-                `
-            },
-            'claude': {
-                title: 'Claude',
-                content: `
-                    <p><strong>An AI assistant made by Anthropic.</strong></p>
-                    <p>Matt used Claude to build the PAL demo. He described what he needed in plain English, and Claude wrote the code.</p>
-                    <p>No programming knowledge required. Just clear descriptions of the problem and what the solution should look like.</p>
-                    <p><strong>$20/month for Pro.</strong> Less than one hour of consultant rates.</p>
-                `
-            },
-            'mobile-phones': {
-                title: 'Mobile Phone Policy',
-                content: `
-                    <p>One of the most common policy questions in Victorian schools.</p>
-                    <p><strong>Short version:</strong> Students must have phones switched off and securely stored during school hours.</p>
-                    <p>It's a good example of something simple that's buried deep in PAL — exactly the kind of thing iTabs helps with.</p>
-                `
-            },
-            'vibe-coding': {
-                title: 'Vibe Coding',
-                content: `
-                    <p><strong>Building things with AI instead of traditional coding skills.</strong></p>
-                    <p>You describe what you want in plain language. AI helps you build it. You refine until it works.</p>
-                    <p>No syntax memorisation. No computer science degree. No dev team required.</p>
-                    <p><strong>The key:</strong> You still need to understand the problem. AI handles the "how". You handle the "why".</p>
-                `
-            },
-            'the-point': {
-                title: 'The Whole Point',
-                content: `
-                    <p>For decades, building software required specialised skills. If you had a problem, you needed to convince a developer to solve it.</p>
-                    <p>Now? <strong>The people closest to the problem can build the solution themselves.</strong></p>
-                    <p>Matt knows PAL's problems better than any developer. So Matt built the solution. That's how it should work.</p>
-                `
-            },
-            'github': {
-                title: 'GitHub Pages',
-                content: `
-                    <p><strong>Free website hosting.</strong></p>
-                    <p>Upload an HTML file, turn on Pages in settings, and you've got a live website in under 2 minutes.</p>
-                    <p>No servers. No domain costs. No technical setup.</p>
-                    <p>Matt's demo is live at:<br><a href="https://boilermaker-innovator.github.io/My-pal/" target="_blank">boilermaker-innovator.github.io/My-pal</a></p>
-                `
-            },
-            'salesforce': {
-                title: 'The Salesforce Question',
-                content: `
-                    <p><strong>Enterprise software is expensive.</strong></p>
-                    <p>Government departments spend millions on platforms like Salesforce. Licensing fees. Implementation costs. Consultants. Training. Ongoing support.</p>
-                    <p>And often? The end users still struggle to get what they need.</p>
-                    <p>Meanwhile, Matt built something useful in the time it took to pour two beers.</p>
-                `
-            },
-            'career': {
-                title: 'The Career Advice',
-                content: `
-                    <p>Jon's advice to Matt: <strong>"Get Claude. Even if it's just for your own career."</strong></p>
-                    <p>Why? Because the people who learn to work with AI now will have a massive advantage.</p>
-                    <p>Matt's a consultant. His job is solving problems. AI just 10x'd his ability to prototype solutions.</p>
-                    <p>That's not a threat to his job — it's a superpower for it.</p>
-                `
-            },
-            'disruption': {
-                title: 'The Real Disruption',
-                content: `
-                    <p>The disruption isn't AI replacing workers.</p>
-                    <p><strong>It's individuals being able to do what used to require entire teams.</strong></p>
-                    <p>One consultant with Claude can now prototype solutions that would have needed:</p>
-                    <ul>
-                        <li>Business analysts</li>
-                        <li>UX designers</li>
-                        <li>Developers</li>
-                        <li>Project managers</li>
-                        <li>Months of meetings</li>
-                    </ul>
-                    <p>Matt did it between rounds at the pub.</p>
-                `
-            },
-            'it-dept': {
-                title: 'Showing IT',
-                content: `
-                    <p>This is the moment that matters.</p>
-                    <p>Matt's not going to IT with a feature request or a complaint. He's going with a <strong>working solution</strong>.</p>
-                    <p>"Here's the problem. Here's something that fixes it. I built it over the weekend."</p>
-                    <p>That's a very different conversation.</p>
-                `
-            },
-            'why-matters': {
-                title: 'Why This Matters',
-                content: `
-                    <p><strong>The gatekeepers are gone.</strong></p>
-                    <p>You used to need:</p>
-                    <ul>
-                        <li>A developer (expensive)</li>
-                        <li>A project budget (slow approval)</li>
-                        <li>Months of development time</li>
-                    </ul>
-                    <p>Now you need:</p>
-                    <ul>
-                        <li>A clear understanding of the problem</li>
-                        <li>The ability to describe what you want</li>
-                        <li>A conversation with AI</li>
-                    </ul>
-                    <p>Matt built a working prototype in one sitting. That changes everything.</p>
-                `
-            }
-        };
+Output <promise>COMPLETE</promise> when done.”
+–max-iterations 50
+–completion-promise “COMPLETE”</code></pre>
+</div>
+<div class="tab-panel" id="prompts-3">
+<h3>Prompt Templates That Work</h3>
+<p><strong>Feature Implementation:</strong></p>
+<pre><code>/ralph-loop “Implement [FEATURE_NAME].
+Requirements:
 
-        function openPopup(id) {
-            const content = itabsContent[id];
-            if (!content) return;
-            document.getElementById('popupTitle').textContent = content.title;
-            document.getElementById('popupContent').innerHTML = content.content;
-            document.getElementById('popupOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
+- [Requirement 1]
+- [Requirement 2]
+
+Success criteria:
+
+- All requirements implemented
+- Tests passing with >80% coverage
+- No linter errors
+
+Output <promise>COMPLETE</promise> when done.”
+–max-iterations 30</code></pre>
+
+```
+                <p><strong>Bug Fix Loop:</strong></p>
+                <pre><code>/ralph-loop "Fix bug: [DESCRIPTION]
+```
+
+Steps:
+
+1. Reproduce the bug
+1. Identify root cause
+1. Implement fix
+1. Write regression test
+1. Verify fix works
+
+Output <promise>FIXED</promise> when confirmed.”
+–max-iterations 20</code></pre>
+
+```
+                <p><strong>Overnight Batch (run before bed):</strong></p>
+                <pre><code># overnight-work.sh
+```
+
+#!/bin/bash
+cd /path/to/project
+claude -p “/ralph-loop ‘Task description…’ –max-iterations 50”</code></pre>
+
+```
+                <div class="jons-note">
+                    <div class="jons-note-label">💡 Prompt Tip</div>
+                    <p>Be specific about success criteria. Vague = infinite loop. Clear completion conditions = Claude knows when to stop.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section 4: Ralph TUI Setup -->
+    <div class="itab-section">
+        <div class="itab-header" onclick="toggleSection(this)">
+            <div class="itab-title">
+                <span class="itab-number">4</span>
+                <span class="itab-name">Ralph TUI Setup</span>
+                <span class="itab-badge">FULL SETUP</span>
+            </div>
+            <button class="i-button">i</button>
+        </div>
+        <div class="itab-content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(this, 'prereq-4')">Prerequisites</button>
+                <button class="tab" onclick="showTab(this, 'install-4')">Install & Setup</button>
+                <button class="tab" onclick="showTab(this, 'prd-4')">Create PRD</button>
+                <button class="tab" onclick="showTab(this, 'run-4')">Run It</button>
+            </div>
+            <div class="tab-panel show" id="prereq-4">
+                <h3>What You Need First</h3>
+                <ol>
+                    <li><strong>Bun</strong> - JavaScript runtime (like Node but faster)
+                        <pre><code>curl -fsSL https://bun.sh/install | bash</code></pre>
+                    </li>
+                    <li><strong>Claude Code CLI</strong> - Or OpenCode as alternative
+                        <pre><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre>
+                    </li>
+                    <li><strong>A project to work on</strong> - Existing codebase or new folder</li>
+                </ol>
+            </div>
+            <div class="tab-panel" id="install-4">
+                <h3>Installation Steps</h3>
+                <p><strong>1. Install Ralph TUI globally:</strong></p>
+                <pre><code>bun install -g ralph-tui</code></pre>
+                
+                <p><strong>2. Navigate to your project:</strong></p>
+                <pre><code>cd your-project</code></pre>
+                
+                <p><strong>3. Run the setup wizard:</strong></p>
+                <pre><code>ralph-tui setup</code></pre>
+                
+                <p><strong>4. Answer the wizard questions:</strong></p>
+                <ul>
+                    <li><strong>Issue tracker:</strong> Choose JSON file (simplest) - tracks tasks in local prd.json</li>
+                    <li><strong>AI agent:</strong> Choose Claude Code (or OpenCode)</li>
+                    <li><strong>Max iterations:</strong> Set to 35 (safe starting point)</li>
+                    <li><strong>Auto-complete:</strong> Keep on for task completion</li>
+                </ul>
+            </div>
+            <div class="tab-panel" id="prd-4">
+                <h3>Creating Your PRD (Product Requirements Doc)</h3>
+                <p>The PRD is an AI conversation where you describe what you want to build. Ralph uses this to create a task list.</p>
+                
+                <p><strong>Start the PRD chat:</strong></p>
+                <pre><code>ralph-tui create-prd --chat</code></pre>
+                
+                <p><strong>The AI will ask you questions like:</strong></p>
+                <ul>
+                    <li>What are you building?</li>
+                    <li>What's the platform? (web, mobile, etc.)</li>
+                    <li>What features do you need?</li>
+                    <li>What's your MVP scope? (quick prototype vs full build)</li>
+                </ul>
+                
+                <p><strong>Be as descriptive as possible.</strong> The more detail you give, the better the task breakdown.</p>
+                
+                <p><strong>After PRD is done:</strong></p>
+                <ul>
+                    <li>It generates a detailed PRD document</li>
+                    <li>You can review and tweak it</li>
+                    <li>Then create a task list from it</li>
+                </ul>
+                
+                <div class="jons-note">
+                    <div class="jons-note-label">💡 Scope Warning</div>
+                    <p>If you say "8-12 week project", Ralph will work rigorously on every feature and burn tokens like crazy. For testing, choose "quick prototype" scope first.</p>
+                </div>
+            </div>
+            <div class="tab-panel" id="run-4">
+                <h3>Running Ralph TUI</h3>
+                <p><strong>Start the TUI:</strong></p>
+                <pre><code>ralph-tui run --prd ./prd.json</code></pre>
+                
+                <p><strong>Keyboard controls in the TUI:</strong></p>
+                <ul>
+                    <li><code>S</code> - Start/deploy agents on tasks</li>
+                    <li><code>T</code> - Toggle trace view (see what agents are doing)</li>
+                    <li><code>P</code> - Pause the loop</li>
+                    <li><code>Q</code> - Quit</li>
+                </ul>
+                
+                <p><strong>What you'll see:</strong></p>
+                <ul>
+                    <li>Left panel: Task list with status (pending, in-progress, done)</li>
+                    <li>Right panel: Live agent output</li>
+                    <li>Bottom: Controls and stats</li>
+                </ul>
+                
+                <p><strong>Running multiple agents:</strong></p>
+                <p>You can start different tasks simultaneously. Press <code>S</code> on each task you want to run in parallel.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section 5: Real Results -->
+    <div class="itab-section">
+        <div class="itab-header" onclick="toggleSection(this)">
+            <div class="itab-title">
+                <span class="itab-number">5</span>
+                <span class="itab-name">Real World Results</span>
+                <span class="itab-badge">CASE STUDIES</span>
+            </div>
+            <button class="i-button">i</button>
+        </div>
+        <div class="itab-content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(this, 'examples-5')">Success Stories</button>
+                <button class="tab" onclick="showTab(this, 'lessons-5')">Lessons Learned</button>
+            </div>
+            <div class="tab-panel show" id="examples-5">
+                <h3>What People Have Built</h3>
+                
+                <p><strong>🔥 Cursed Lang (Geoffrey Huntley)</strong></p>
+                <p>A complete programming language built autonomously. Ralph ran for 3 hours continuously - writing, iterating, fixing mistakes until the language actually compiled and ran.</p>
+                
+                <p><strong>🚀 YC Hackathon Teams</strong></p>
+                <p>Shipped 6+ repos overnight for $297 in API costs. Set up batch scripts, went to sleep, woke up to working code.</p>
+                
+                <p><strong>🛠️ Codebase Refactor</strong></p>
+                <p>Someone set up a REACT_CODING_STANDARDS.md file, then launched Ralph with "make sure the codebase matches the standards". Over 6 hours, it created a refactor plan and worked through the entire codebase.</p>
+                
+                <p><strong>📱 Second Brain App (from the video)</strong></p>
+                <p>Visual graph-based thought mapping app. 1 hour 45 minutes of autonomous development. Fully functional, tested, debugged.</p>
+            </div>
+            <div class="tab-panel" id="lessons-5">
+                <h3>Hard-Won Lessons</h3>
+                
+                <p><strong>Keep change sets manageable:</strong></p>
+                <p>For existing codebases, set Ralph to run ONCE overnight on a cron, making small iterations. Waking up to one small refactor daily beats waking up to 50 massive changes.</p>
+                
+                <p><strong>Define "done" clearly:</strong></p>
+                <p>Vague prompts = infinite loops. "Make it better" will run forever. "All tests passing with >80% coverage" has a clear endpoint.</p>
+                
+                <p><strong>Start conservative with iterations:</strong></p>
+                <ul>
+                    <li>Small task: 10-20 iterations</li>
+                    <li>Medium task: 30-50 iterations</li>
+                    <li>Complex project: 100+ (monitor closely!)</li>
+                </ul>
+                
+                <p><strong>Autonomous ≠ unsupervised:</strong></p>
+                <p>Check in periodically. Ralph might get stuck in a loop or go in the wrong direction. Human judgment still matters for strategic decisions.</p>
+                
+                <div class="jons-note">
+                    <div class="jons-note-label">💡 The Real Skill</div>
+                    <p>Ralph doesn't replace human judgment - it automates mechanical execution. The skill shifts from "directing Claude step by step" to "writing prompts that converge toward correct solutions."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section 6: Quick Reference -->
+    <div class="itab-section">
+        <div class="itab-header" onclick="toggleSection(this)">
+            <div class="itab-title">
+                <span class="itab-number">6</span>
+                <span class="itab-name">Quick Reference</span>
+                <span class="itab-badge">CHEAT SHEET</span>
+            </div>
+            <button class="i-button">i</button>
+        </div>
+        <div class="itab-content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(this, 'commands-6')">Commands</button>
+                <button class="tab" onclick="showTab(this, 'links-6')">Links</button>
+            </div>
+            <div class="tab-panel show" id="commands-6">
+                <h3>Copy-Paste Commands</h3>
+                
+                <p><strong>Ralph Loop Plugin:</strong></p>
+                <pre><code># Install
+```
+
+/plugin install ralph-wiggum
+
+# Basic loop
+
+/ralph-loop “Your task” –max-iterations 30
+
+# With completion token
+
+/ralph-loop “Task here. Output <promise>DONE</promise> when complete.” –completion-promise “DONE”</code></pre>
+
+```
+                <p><strong>Ralph TUI:</strong></p>
+                <pre><code># Install
+```
+
+bun install -g ralph-tui
+
+# Setup in project
+
+cd your-project
+ralph-tui setup
+
+# Create PRD
+
+ralph-tui create-prd –chat
+
+# Run
+
+ralph-tui run –prd ./prd.json</code></pre>
+</div>
+<div class="tab-panel" id="links-6">
+<h3>Essential Links</h3>
+<ul>
+<li><span class="smart-link" onclick="showLinkPopup('ralph-tui-docs')">Ralph TUI Documentation</span> - Official docs and guides</li>
+<li><span class="smart-link" onclick="showLinkPopup('ralph-tui-github')">Ralph TUI GitHub</span> - Source code and issues</li>
+<li><span class="smart-link" onclick="showLinkPopup('ralph-claude-github')">Ralph Claude Code GitHub</span> - Alternative implementation</li>
+<li><span class="smart-link" onclick="showLinkPopup('paddo-blog')">Paddo Blog - Ralph Explained</span> - Deep dive article</li>
+<li><span class="smart-link" onclick="showLinkPopup('awesome-claude')">Awesome Claude - Ralph Wiggum</span> - More examples and templates</li>
+<li><span class="smart-link" onclick="showLinkPopup('history-ralph')">Brief History of Ralph</span> - How it all started</li>
+</ul>
+</div>
+</div>
+</div>
+
+```
+    <footer>
+        <p>Built for Desmond by Jon with Claude • <a href="https://itabs.ai">itabs.ai</a></p>
+        <p style="margin-top: 10px; font-size: 0.85rem;">Source: <a href="https://youtu.be/pzBSYMCrYMk" target="_blank">World of AI - Ralph Loop TUI Video</a></p>
+    </footer>
+</div>
+
+<!-- Link Preview Popup -->
+<div class="link-popup-overlay" id="linkPopup" onclick="closeLinkPopup(event)">
+    <div class="link-popup" onclick="event.stopPropagation()">
+        <div class="link-popup-header">
+            <h3 id="popupTitle">Link Preview</h3>
+            <button class="link-popup-close" onclick="closeLinkPopup()">×</button>
+        </div>
+        <div class="link-popup-body">
+            <div class="link-popup-section">
+                <div class="link-popup-label">What is this?</div>
+                <div class="link-popup-text" id="popupWhat"></div>
+            </div>
+            <div class="link-popup-section">
+                <div class="link-popup-label">Why it matters</div>
+                <div class="link-popup-text" id="popupWhy"></div>
+            </div>
+            <div class="link-popup-section">
+                <div class="link-popup-label">URL</div>
+                <div class="link-popup-url" id="popupUrl"></div>
+            </div>
+        </div>
+        <div class="link-popup-actions">
+            <button class="link-popup-btn link-popup-btn-secondary" onclick="closeLinkPopup()">Got it</button>
+            <a class="link-popup-btn link-popup-btn-primary" id="popupOpenLink" href="#" target="_blank">Open Link →</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const linkData = {
+        'claude-code': {
+            title: "Claude Code CLI",
+            what: "Anthropic's command-line tool for coding with Claude. Required to run Ralph Loop and Ralph TUI.",
+            why: "You need this installed first before any Ralph stuff will work. It's the underlying engine.",
+            url: "https://claude.ai/download"
+        },
+        'ralph-tui-docs': {
+            title: "Ralph TUI Documentation",
+            what: "Official documentation site for Ralph TUI. Full guides, examples, and configuration options.",
+            why: "Go here when you need detailed setup help or want to understand all the features.",
+            url: "https://ralph-tui.com/docs/getting-started/introduction"
+        },
+        'ralph-tui-github': {
+            title: "Ralph TUI GitHub",
+            what: "Source code repository for Ralph TUI. See how it works, report issues, contribute.",
+            why: "Check here for updates, known issues, or if you want to understand the code.",
+            url: "https://github.com/subsy/ralph-tui"
+        },
+        'ralph-claude-github': {
+            title: "Ralph Claude Code GitHub",
+            what: "Alternative implementation of Ralph for Claude Code. More focused on CLI usage without the TUI.",
+            why: "If you want simpler Ralph without the visual interface, this is a good option.",
+            url: "https://github.com/frankbria/ralph-claude-code"
+        },
+        'paddo-blog': {
+            title: "Paddo Blog - Ralph Wiggum Explained",
+            what: "Deep-dive article explaining how Ralph Wiggum works, the Stop hook mechanism, and when to use it.",
+            why: "Best written explanation of the technique. Read this to really understand what's happening.",
+            url: "https://paddo.dev/blog/ralph-wiggum-autonomous-loops/"
+        },
+        'awesome-claude': {
+            title: "Awesome Claude - Ralph Wiggum",
+            what: "Curated page with Ralph Wiggum examples, prompt templates, and advanced usage patterns.",
+            why: "Great for copy-paste prompt templates and seeing what others have done.",
+            url: "https://awesomeclaude.ai/ralph-wiggum"
+        },
+        'history-ralph': {
+            title: "Brief History of Ralph",
+            what: "Blog post telling the story of how Ralph evolved from Geoffrey Huntley's experiments.",
+            why: "Fun read about how this all started. Includes the story of cursed-lang being built autonomously.",
+            url: "https://www.humanlayer.dev/blog/brief-history-of-ralph"
         }
-
-        function closePopup() {
-            document.getElementById('popupOverlay').classList.remove('active');
-            document.body.style.overflow = '';
+    };
+    
+    function toggleSection(header) {
+        const content = header.nextElementSibling;
+        const button = header.querySelector('.i-button');
+        
+        content.classList.toggle('show');
+        button.classList.toggle('active');
+    }
+    
+    function showTab(tabButton, panelId) {
+        const container = tabButton.closest('.itab-content');
+        
+        container.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        container.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.remove('show');
+        });
+        
+        tabButton.classList.add('active');
+        document.getElementById(panelId).classList.add('show');
+    }
+    
+    function showLinkPopup(linkId) {
+        const data = linkData[linkId];
+        if (!data) return;
+        
+        document.getElementById('popupTitle').textContent = data.title;
+        document.getElementById('popupWhat').textContent = data.what;
+        document.getElementById('popupWhy').textContent = data.why;
+        document.getElementById('popupUrl').textContent = data.url;
+        document.getElementById('popupOpenLink').href = data.url;
+        
+        document.getElementById('linkPopup').classList.add('show');
+    }
+    
+    function closeLinkPopup(event) {
+        if (event && event.target !== event.currentTarget) return;
+        document.getElementById('linkPopup').classList.remove('show');
+    }
+    
+    // Open first section by default
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstHeader = document.querySelector('.itab-header');
+        if (firstHeader) {
+            toggleSection(firstHeader);
         }
+    });
+</script>
+```
 
-        document.querySelectorAll('.itabs-btn[data-popup]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openPopup(btn.dataset.popup);
-            });
-        });
-
-        document.getElementById('popupOverlay').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) closePopup();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closePopup();
-        });
-    </script>
 </body>
 </html>
